@@ -1,4 +1,4 @@
-package ua.pavel.malko.android.zimadtestapp.ui;
+package ua.pavel.malko.android.zimadtestapp;
 
 import android.app.Application;
 

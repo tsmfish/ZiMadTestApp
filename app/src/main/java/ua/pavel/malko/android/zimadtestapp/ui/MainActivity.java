@@ -15,11 +15,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.nav_host_fragment,
-                        new TabContainerFragment(),
-                        TAG_TAB_CONTAINER)
-                .commit();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.nav_host_fragment,
+                            new TabContainerFragment(),
+                            TAG_TAB_CONTAINER)
+                    .commit();
+        }
     }
 }

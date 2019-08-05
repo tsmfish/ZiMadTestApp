@@ -32,6 +32,7 @@ public class TabContainerFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "onActivityCreated() called with: savedInstanceState = [" + savedInstanceState + "]");
         super.onActivityCreated(savedInstanceState);
 
         tabLayout = getView().findViewById(R.id.tabLayout);
@@ -72,17 +73,23 @@ public class TabContainerFragment extends Fragment {
 
             }
         });
+    }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        Log.d(LOG_TAG, "onSaveInstanceState() called with: outState = [" + outState + "]");
+        outState.putInt(KEY_SELECTED_TAB, tabLayout.getSelectedTabPosition());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "onViewStateRestored() called with: savedInstanceState = [" + savedInstanceState + "]");
+        super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_SELECTED_TAB)) {
                 tabLayout.getTabAt(savedInstanceState.getInt(KEY_SELECTED_TAB)).select();
             }
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(KEY_SELECTED_TAB, tabLayout.getSelectedTabPosition());
     }
 }

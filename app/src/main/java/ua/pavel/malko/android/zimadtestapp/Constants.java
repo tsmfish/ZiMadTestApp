@@ -3,6 +3,7 @@ package ua.pavel.malko.android.zimadtestapp;
 public abstract class Constants {
     public static final String TAG_LIST_CONTAINER = "list container";
     public static final String TAG_TAB_CONTAINER = "tab container";
+    public static final String TAG_INFO_CONTAINER = "info fragment";
 
     public static final String BASE_URL = "http://kot3.com";
 

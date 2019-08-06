@@ -11,21 +11,39 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import ua.pavel.malko.android.zimadtestapp.BuildConfig;
 import ua.pavel.malko.android.zimadtestapp.Constants;
 import ua.pavel.malko.android.zimadtestapp.R;
 import ua.pavel.malko.android.zimadtestapp.databinding.FragmentListContinerBinding;
+import ua.pavel.malko.android.zimadtestapp.ui.petinfo.PetInfoFragment;
+
+import static ua.pavel.malko.android.zimadtestapp.Constants.TAG_INFO_CONTAINER;
 
 public class ListContainerFragment extends Fragment {
     private static final String LOG_TAG = ListContainerFragment.class.getSimpleName();
+
     private final static String PETS_TYPE_KEY = "pets";
+
     private ListContainerViewModel viewModel;
     private FragmentListContinerBinding binding;
     private PetsAdapter adapter = new PetsAdapter((position, pet) -> {
         if (BuildConfig.DEBUG)
             Log.d(LOG_TAG, "PetsAdapter::onItemClick(" + position + ", " + pet.getTitle() + ")");
+        if (position != RecyclerView.NO_POSITION && pet != null) {
+            getActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.nav_host_fragment,
+                            PetInfoFragment.getInstance(pet.getImageUrl(), pet.getTitle(), position + 1),
+                            TAG_INFO_CONTAINER
+                    )
+                    .commit();
+        }
     });
+
     public static ListContainerFragment getInstance(Constants.PetsType type) {
         if (BuildConfig.DEBUG)
             Log.d(LOG_TAG, "getInstance() called with: type = [" + type + "]");
@@ -36,6 +54,7 @@ public class ListContainerFragment extends Fragment {
         instance.setArguments(arguments);
         return instance;
     }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -49,6 +68,7 @@ public class ListContainerFragment extends Fragment {
 
         subscribeToViewModel(viewModel);
     }
+
     private void subscribeToViewModel(ListContainerViewModel viewModel) {
         viewModel.pets.observe(getViewLifecycleOwner(), pets -> {
             if (pets != null)

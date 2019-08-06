@@ -1,6 +1,7 @@
 package ua.pavel.malko.android.zimadtestapp.ui.petinfo;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import ua.pavel.malko.android.zimadtestapp.BuildConfig;
 import ua.pavel.malko.android.zimadtestapp.R;
 import ua.pavel.malko.android.zimadtestapp.databinding.FragmentPetInfoBinding;
 
@@ -26,12 +28,14 @@ public class PetInfoFragment extends Fragment {
     private PetInfoViewModel viewModel;
 
     public static PetInfoFragment getInstance(String imageUrl, String title, Integer index) {
+        if (BuildConfig.DEBUG)
+            Log.d(LOG_TAG, "getInstance() called with: imageUrl = [" + imageUrl + "], title = [" + title + "], index = [" + index + "]");
         final PetInfoFragment fragment = new PetInfoFragment();
         final Bundle arguments = new Bundle();
 
         arguments.putString(KEY_IMAGE_URL, imageUrl);
         arguments.putString(KEY_TITLE, title);
-        arguments.getInt(KEY_INDEX, index);
+        arguments.putInt(KEY_INDEX, index);
         fragment.setArguments(arguments);
 
         return fragment;

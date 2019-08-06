@@ -46,6 +46,14 @@ public class ListContainerFragment extends Fragment {
 
         binding.rvPets.setHasFixedSize(true);
         binding.setAdapter(adapter);
+
+        subscribeToViewModel(viewModel);
+    }
+    private void subscribeToViewModel(ListContainerViewModel viewModel) {
+        viewModel.pets.observe(getViewLifecycleOwner(), pets -> {
+            if (pets != null)
+                adapter.update(pets);
+        });
     }
 
     @Nullable

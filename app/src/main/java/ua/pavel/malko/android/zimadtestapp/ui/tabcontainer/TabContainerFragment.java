@@ -82,7 +82,7 @@ public class TabContainerFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-//        outState.putInt(KEY_SELECTED_TAB, tabLayout.getSelectedTabPosition());
+        outState.putInt(KEY_SELECTED_TAB, tabLayout.getSelectedTabPosition());
         super.onSaveInstanceState(outState);
     }
 
@@ -90,12 +90,9 @@ public class TabContainerFragment extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
-//            if (savedInstanceState.containsKey(KEY_SELECTED_TAB)) {
-//                tabLayout.getTabAt(savedInstanceState.getInt(KEY_SELECTED_TAB)).select();
-//            }
-        } else {
-//            tabLayout.getTabAt(0).select();
-//            tabLayout.getTabAt(0).
+            if (savedInstanceState.containsKey(KEY_SELECTED_TAB)) {
+                tabLayout.getTabAt(savedInstanceState.getInt(KEY_SELECTED_TAB)).select();
+            }
         }
     }
 }

@@ -32,7 +32,6 @@ public class TabContainerFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        Log.d(LOG_TAG, "onActivityCreated() called with: savedInstanceState = [" + savedInstanceState + "]");
         super.onActivityCreated(savedInstanceState);
 
         tabLayout = getView().findViewById(R.id.tabLayout);
@@ -66,30 +65,37 @@ public class TabContainerFragment extends Fragment {
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
+        getActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.fl_tab_fragment_container,
+                        ListContainerFragment.getInstance(Constants.PetsType.CATS),
+                        TAG_LIST_CONTAINER)
+                .commit();
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        Log.d(LOG_TAG, "onSaveInstanceState() called with: outState = [" + outState + "]");
-        outState.putInt(KEY_SELECTED_TAB, tabLayout.getSelectedTabPosition());
+//        outState.putInt(KEY_SELECTED_TAB, tabLayout.getSelectedTabPosition());
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        Log.d(LOG_TAG, "onViewStateRestored() called with: savedInstanceState = [" + savedInstanceState + "]");
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(KEY_SELECTED_TAB)) {
-                tabLayout.getTabAt(savedInstanceState.getInt(KEY_SELECTED_TAB)).select();
-            }
+//            if (savedInstanceState.containsKey(KEY_SELECTED_TAB)) {
+//                tabLayout.getTabAt(savedInstanceState.getInt(KEY_SELECTED_TAB)).select();
+//            }
+        } else {
+//            tabLayout.getTabAt(0).select();
+//            tabLayout.getTabAt(0).
         }
     }
 }

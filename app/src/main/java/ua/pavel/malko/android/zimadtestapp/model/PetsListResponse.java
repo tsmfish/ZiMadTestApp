@@ -4,11 +4,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class PetsListAnswer {
+public class PetsListResponse {
     @SerializedName("data")
     List<Pet> pets;
     @SerializedName("message")
     private String text;
+
     public String getText() {
         return text;
     }

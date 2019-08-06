@@ -14,7 +14,8 @@ public abstract class BindingAdapters {
             Picasso
                     .get()
                     .load(url)
-                    .centerInside()
+                    .fit()
+                    .centerCrop()
                     .into(view);
         }
     }

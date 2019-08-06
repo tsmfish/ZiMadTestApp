@@ -6,24 +6,28 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="ua.pavel.malko.android.zimadtestapp.ui.petinfo.PetInfoViewModel" />
+            name="item"
+            type="ua.pavel.malko.android.zimadtestapp.model.Pet" />
+
+        <variable
+            name="index"
+            type="Integer" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/image"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="3:2"
+            android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:setSrc="@{viewModel.getImageUrl}"
+            app:setSrc="@{item.imageUrl}"
             tools:src="@tools:sample/avatars" />
 
         <TextView
@@ -31,9 +35,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:text="@{viewModel.getIndex}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image"
+            android:text="@{String.valueOf(index)}"
+            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="index" />
 
         <TextView
@@ -41,10 +45,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:text="@{viewModel.getTitle}"
-            app:layout_constraintTop_toBottomOf="@id/tv_index"
+            android:text="@{item.title}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintTop_toBottomOf="@id/tv_index"
             tools:text="Title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

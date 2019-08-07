@@ -17,6 +17,7 @@ import ua.pavel.malko.android.zimadtestapp.BuildConfig;
 import ua.pavel.malko.android.zimadtestapp.Constants;
 import ua.pavel.malko.android.zimadtestapp.R;
 import ua.pavel.malko.android.zimadtestapp.databinding.FragmentListContinerBinding;
+import ua.pavel.malko.android.zimadtestapp.repository.StateRepository;
 import ua.pavel.malko.android.zimadtestapp.ui.petinfo.PetInfoFragment;
 
 import static ua.pavel.malko.android.zimadtestapp.Constants.TAG_INFO_CONTAINER;
@@ -44,6 +45,7 @@ public class ListContainerFragment extends Fragment {
                     .commit();
         }
     });
+    private Constants.PetsType type;
 
     public static ListContainerFragment getInstance(Constants.PetsType type) {
         if (BuildConfig.DEBUG)
@@ -61,25 +63,19 @@ public class ListContainerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         final Bundle arguments = getArguments() != null ? getArguments() : new Bundle();
-        final Constants.PetsType type = Constants.PetsType.valueOf(arguments.getString(PETS_TYPE_KEY, Constants.PetsType.CATS.name()));
+        type = Constants.PetsType.valueOf(arguments.getString(PETS_TYPE_KEY, Constants.PetsType.CATS.name()));
         viewModel = ViewModelProviders.of(this, new ListContainerViewModelFactory(type)).get(ListContainerViewModel.class);
 
         binding.rvPets.setHasFixedSize(true);
         binding.setAdapter(adapter);
 
         subscribeToViewModel(viewModel);
-
-//        if (savedInstanceState != null && savedInstanceState.containsKey(SCROLL_STATE_KEY)) {
-//            binding.rvPets.setScrollY(savedInstanceState.getInt(SCROLL_STATE_KEY));
-//        }
     }
 
     private void subscribeToViewModel(ListContainerViewModel viewModel) {
         viewModel.pets.observe(getViewLifecycleOwner(), pets -> {
             if (pets != null) {
-                Log.d(LOG_TAG, "before update rvPets.getScaleY(): " + binding.rvPets.getScaleY());
                 adapter.update(pets);
-                Log.d(LOG_TAG, "after update rvPets.getScaleY(): " + binding.rvPets.getScaleY());
             }
         });
     }
@@ -90,10 +86,16 @@ public class ListContainerFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list_continer, container, false);
         return binding.getRoot();
     }
-//
-//    @Override
-//    public void onSaveInstanceState(@NonNull Bundle outState) {
-//        outState.putInt(SCROLL_STATE_KEY, binding.rvPets.getScrollY());
-//        super.onSaveInstanceState(outState);
-//    }
+    @Override
+    public void onStop() {
+        if (binding.rvPets != null)
+            StateRepository.getInstance().saveScroll(type.name(), binding.rvPets.getLayoutManager().onSaveInstanceState());
+        super.onStop();
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (binding.rvPets != null)
+            binding.rvPets.getLayoutManager().onRestoreInstanceState(StateRepository.getInstance().getScroll(type.name()));
+    }
 }

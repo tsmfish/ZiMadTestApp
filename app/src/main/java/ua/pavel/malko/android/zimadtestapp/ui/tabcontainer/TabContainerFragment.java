@@ -15,9 +15,8 @@ import com.google.android.material.tabs.TabLayout;
 import ua.pavel.malko.android.zimadtestapp.BuildConfig;
 import ua.pavel.malko.android.zimadtestapp.Constants;
 import ua.pavel.malko.android.zimadtestapp.R;
+import ua.pavel.malko.android.zimadtestapp.repository.StateRepository;
 import ua.pavel.malko.android.zimadtestapp.ui.listcontainer.ListContainerFragment;
-
-import static ua.pavel.malko.android.zimadtestapp.Constants.TAG_LIST_CONTAINER;
 
 public class TabContainerFragment extends Fragment {
     private static final String LOG_TAG = TabContainerFragment.class.getSimpleName();
@@ -32,6 +31,7 @@ public class TabContainerFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "onActivityCreated() called with: savedInstanceState = [" + savedInstanceState + "]");
         super.onActivityCreated(savedInstanceState);
 
         tabLayout = getView().findViewById(R.id.tabLayout);
@@ -48,7 +48,7 @@ public class TabContainerFragment extends Fragment {
 //                                .addToBackStack(null)
                                 .replace(R.id.fl_tab_fragment_container,
                                         ListContainerFragment.getInstance(Constants.PetsType.CATS),
-                                        TAG_LIST_CONTAINER)
+                                        Constants.PetsType.CATS.name())
                                 .commit();
                         break;
                     case 1:
@@ -58,7 +58,7 @@ public class TabContainerFragment extends Fragment {
 //                                .addToBackStack(null)
                                 .replace(R.id.fl_tab_fragment_container,
                                         ListContainerFragment.getInstance(Constants.PetsType.DOGS),
-                                        TAG_LIST_CONTAINER)
+                                        Constants.PetsType.DOGS.name())
                                 .commit();
                         break;
                 }
@@ -71,30 +71,28 @@ public class TabContainerFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-    }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (tabLayout != null)
-            outState.putInt(KEY_SELECTED_TAB, tabLayout.getSelectedTabPosition());
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_SELECTED_TAB)) {
-            tabLayout.getTabAt(savedInstanceState.getInt(KEY_SELECTED_TAB)).select();
-        } else {
+        if (savedInstanceState == null) {
             getActivity()
                     .getSupportFragmentManager()
                     .beginTransaction()
-//                    .addToBackStack(null)
+//                                .addToBackStack(null)
                     .add(R.id.fl_tab_fragment_container,
                             ListContainerFragment.getInstance(Constants.PetsType.CATS),
-                            TAG_LIST_CONTAINER)
+                            Constants.PetsType.CATS.name())
                     .commit();
-
         }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        tabLayout.getTabAt(StateRepository.getInstance().selectedTab).select();
+    }
+    @Override
+    public void onStop() {
+        StateRepository.getInstance().selectedTab = tabLayout.getSelectedTabPosition();
+        super.onStop();
     }
 }

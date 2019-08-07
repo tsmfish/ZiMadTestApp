@@ -76,8 +76,11 @@ public class ListContainerFragment extends Fragment {
 
     private void subscribeToViewModel(ListContainerViewModel viewModel) {
         viewModel.pets.observe(getViewLifecycleOwner(), pets -> {
-            if (pets != null)
+            if (pets != null) {
+                Log.d(LOG_TAG, "before update rvPets.getScaleY(): " + binding.rvPets.getScaleY());
                 adapter.update(pets);
+                Log.d(LOG_TAG, "after update rvPets.getScaleY(): " + binding.rvPets.getScaleY());
+            }
         });
     }
 

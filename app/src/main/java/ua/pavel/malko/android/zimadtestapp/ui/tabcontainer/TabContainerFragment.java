@@ -45,7 +45,7 @@ public class TabContainerFragment extends Fragment {
                         getActivity()
                                 .getSupportFragmentManager()
                                 .beginTransaction()
-                                .addToBackStack(null)
+//                                .addToBackStack(null)
                                 .replace(R.id.fl_tab_fragment_container,
                                         ListContainerFragment.getInstance(Constants.PetsType.CATS),
                                         TAG_LIST_CONTAINER)
@@ -55,7 +55,7 @@ public class TabContainerFragment extends Fragment {
                         getActivity()
                                 .getSupportFragmentManager()
                                 .beginTransaction()
-                                .addToBackStack(null)
+//                                .addToBackStack(null)
                                 .replace(R.id.fl_tab_fragment_container,
                                         ListContainerFragment.getInstance(Constants.PetsType.DOGS),
                                         TAG_LIST_CONTAINER)
@@ -75,21 +75,22 @@ public class TabContainerFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putInt(KEY_SELECTED_TAB, tabLayout.getSelectedTabPosition());
+        if (tabLayout != null)
+            outState.putInt(KEY_SELECTED_TAB, tabLayout.getSelectedTabPosition());
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState != null && !savedInstanceState.containsKey(KEY_SELECTED_TAB)) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_SELECTED_TAB)) {
             tabLayout.getTabAt(savedInstanceState.getInt(KEY_SELECTED_TAB)).select();
         } else {
             getActivity()
                     .getSupportFragmentManager()
                     .beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.fl_tab_fragment_container,
+//                    .addToBackStack(null)
+                    .add(R.id.fl_tab_fragment_container,
                             ListContainerFragment.getInstance(Constants.PetsType.CATS),
                             TAG_LIST_CONTAINER)
                     .commit();

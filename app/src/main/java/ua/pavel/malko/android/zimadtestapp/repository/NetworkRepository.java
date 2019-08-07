@@ -8,8 +8,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.readystatesoftware.chuck.ChuckInterceptor;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -30,7 +31,7 @@ public class NetworkRepository {
     private static NetworkRepository instance = null;
     private Retrofit retrofit;
     private Api api;
-    private MutableLiveData<List<Pet>> result = new MutableLiveData<>();
+    private Map<String, MutableLiveData<List<Pet>>> result = new HashMap();
     private NetworkRepository() {
     }
     public static NetworkRepository getInstance() {
@@ -70,26 +71,27 @@ public class NetworkRepository {
     public LiveData<List<Pet>> getPets(Constants.PetsType type) {
         if (!isInit()) throw new IllegalStateException("Must be initialised before call");
 
-        result.postValue(new ArrayList<>());
-
-        api.friends(type.key).enqueue(new Callback<PetsListResponse>() {
-            @Override
-            public void onResponse(Call<PetsListResponse> call, Response<PetsListResponse> response) {
-                if (response.isSuccessful()
-                        && response.body() != null) {
-                    if (BuildConfig.DEBUG)
-                        Log.d(LOG_TAG, String.format("NetworkRepository::getPets(%s).size(): %d",
-                                type.name(),
-                                response.body().getPets().size()));
-                    result.postValue(response.body().getPets());
+        if (!result.containsKey(type.name())) {
+            result.put(type.name(), new MutableLiveData<>());
+            api.friends(type.key).enqueue(new Callback<PetsListResponse>() {
+                @Override
+                public void onResponse(Call<PetsListResponse> call, Response<PetsListResponse> response) {
+                    if (response.isSuccessful()
+                            && response.body() != null) {
+                        if (BuildConfig.DEBUG)
+                            Log.d(LOG_TAG, String.format("NetworkRepository::getPets(%s).size(): %d",
+                                    type.name(),
+                                    response.body().getPets().size()));
+                        result.get(type.name()).postValue(response.body().getPets());
+                    }
                 }
-            }
-            @Override
-            public void onFailure(Call<PetsListResponse> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+                @Override
+                public void onFailure(Call<PetsListResponse> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        }
 
-        return result;
+        return result.get(type.name());
     }
 }

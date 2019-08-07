@@ -25,6 +25,7 @@ public class ListContainerFragment extends Fragment {
     private static final String LOG_TAG = ListContainerFragment.class.getSimpleName();
 
     private final static String PETS_TYPE_KEY = "pets";
+    private final static String SCROLL_STATE_KEY = "pets";
 
     private ListContainerViewModel viewModel;
     private FragmentListContinerBinding binding;
@@ -67,6 +68,10 @@ public class ListContainerFragment extends Fragment {
         binding.setAdapter(adapter);
 
         subscribeToViewModel(viewModel);
+
+//        if (savedInstanceState != null && savedInstanceState.containsKey(SCROLL_STATE_KEY)) {
+//            binding.rvPets.setScrollY(savedInstanceState.getInt(SCROLL_STATE_KEY));
+//        }
     }
 
     private void subscribeToViewModel(ListContainerViewModel viewModel) {
@@ -82,4 +87,10 @@ public class ListContainerFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list_continer, container, false);
         return binding.getRoot();
     }
+//
+//    @Override
+//    public void onSaveInstanceState(@NonNull Bundle outState) {
+//        outState.putInt(SCROLL_STATE_KEY, binding.rvPets.getScrollY());
+//        super.onSaveInstanceState(outState);
+//    }
 }

@@ -63,6 +63,7 @@ public class TabContainerFragment extends Fragment {
                         break;
                 }
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
             }
@@ -70,14 +71,6 @@ public class TabContainerFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-        getActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .addToBackStack(null)
-                .replace(R.id.fl_tab_fragment_container,
-                        ListContainerFragment.getInstance(Constants.PetsType.CATS),
-                        TAG_LIST_CONTAINER)
-                .commit();
     }
 
     @Override
@@ -89,10 +82,18 @@ public class TabContainerFragment extends Fragment {
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(KEY_SELECTED_TAB)) {
-                tabLayout.getTabAt(savedInstanceState.getInt(KEY_SELECTED_TAB)).select();
-            }
+        if (savedInstanceState != null && !savedInstanceState.containsKey(KEY_SELECTED_TAB)) {
+            tabLayout.getTabAt(savedInstanceState.getInt(KEY_SELECTED_TAB)).select();
+        } else {
+            getActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.fl_tab_fragment_container,
+                            ListContainerFragment.getInstance(Constants.PetsType.CATS),
+                            TAG_LIST_CONTAINER)
+                    .commit();
+
         }
     }
 }
